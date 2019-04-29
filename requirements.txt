@@ -1,0 +1,54 @@
+# local package
+-e .
+
+# external requirements
+click
+Sphinx
+coverage
+awscli
+flake8
+python-dotenv>=0.5.1
+
+
+# backwards compatibility
+pathlib2
+
+####
+pep8-naming
+
+# data analysis
+scipy
+numpy==1.14.5 # the default version (1.15.0) throws tons 
+              # of annoying compatibility warnings
+matplotlib
+pandas==0.20.3
+seaborn
+networkx
+tables
+
+statsmodels
+
+jupyter
+jupyter_contrib_nbextensions
+
+# for data analysis
+# uncomment the following if you want to use the github version. If you are still editing the
+# library, you can point pip to your local copy, for example: 
+#   pip install -e /home/orenled/Dropbox/code/openbadge-analysis --upgrade  
+git+git://github.com/HumanDynamics/openbadge-analysis.git
+
+crc16
+
+# calling R from Python
+#rpy2<2.9.0
+
+# Jupyter
+jupyter
+jupyter_contrib_nbextensions
+ # then, run jupyter contrib nbextension install --user
+
+# Pretty tables
+pybloqs
+# The following requires this - https://wkhtmltopdf.org/downloads.html
+imgkit
+
