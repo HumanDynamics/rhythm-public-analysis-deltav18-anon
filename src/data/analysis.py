@@ -16,14 +16,14 @@ def analyze_data():
     """
     logger.info("Analysing data")
 
-    #try:
-    #    os.remove(analysis_store_path)
-    #except OSError:
-    #    pass
+    try:
+        os.remove(analysis_store_path)
+    except OSError:
+        pass
 
-    #analysis_comply()
+    analysis_comply()
     logger.info("----------------------------------------------------------")
-    #analysis_metadata()
+    analysis_metadata()
     logger.info("----------------------------------------------------------")
     analysis_connections()
 
