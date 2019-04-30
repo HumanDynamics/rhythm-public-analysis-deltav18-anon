@@ -63,7 +63,7 @@ Project Organization
 3. Setup the AWS command line interface (https://aws.amazon.com/cli/) . I'm using it to store the files separately from the code, and the data goes into a AWS bucket. Go easy on it though, it's on my personal account at the moment :) 
 4. Clone this repository
 5. Go into the repo's folder, and run "pip install -r requirements.txt". This will install the required python libraries in your environment
-6. Run "make sync_from_s3" and it will pull some files to the data folder. If you did it before, do it again to get the latest files. 
+6. Run "make sync_from_s3" and it will pull some files to the data folder. If you did it before, do it again to get the latest files. (Note - will not work for this example at the moment. I am waiting for IRB approvals before sharing the data)
 
 
 This will setup everything you need in order to work. The next steps are:
