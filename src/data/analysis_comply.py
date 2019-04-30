@@ -205,37 +205,46 @@ def _analyze_day(start_ts, end_ts):
     logger.info('loading m2m')
     m2m = pd.read_hdf(clean_store_path, 'proximity/member_to_member', where=where)
 
-    # --- m1cb
-    logger.info("Preparing m1cb")
-    m1cb = _analysis_m1cb(m5cb, members_metadata, beacons_metadata)
-
-    logger.info("Preparing m1cb from dirty")
-    m1cb_dirty = _analysis_m1cb(m5cb_dirty, members_metadata, beacons_metadata)
-
-    # --- m_onboard
-    logger.info("Preparing compliance table")
-    m_comply = _analysis_compliance(m2badge, m1cb, board_threshold=-48)
-
-    logger.info("Preparing compliance table from dirty (to be used to determine participants' start day")
-    m_comply_dirty = _analysis_compliance(m2badge, m1cb_dirty, board_threshold=-48)
-
-    # --- m2m_ncomply
-    logger.info("Preparing m2m_comply")
-    m2m_comply = _analysis_m2m_comply(m2m, m_comply)
-    logger.info("m2m_comply: before {}, after {}".format(len(m2m),len(m2m_comply)))
-
-    logger.info("Saving data")
+    # --- m1cb + m_onboard + m2m_ncomply
     store = pd.HDFStore(analysis_store_path)
-    store.append('proximity/member_closest_beacon', m1cb)
-    store.append('proximity/member_comply', m_comply)
-    store.append('proximity/member_comply_dirty', m_comply_dirty)
-    store.append('proximity/member_to_member', m2m_comply)
+
+    if len(m5cb)  > 0:
+        logger.info("Preparing m1cb")
+        m1cb = _analysis_m1cb(m5cb, members_metadata, beacons_metadata)
+        
+        logger.info("Preparing compliance table")
+        m_comply = _analysis_compliance(m2badge, m1cb, board_threshold=-48)
+        
+        logger.info("Preparing m2m_comply")
+        m2m_comply = _analysis_m2m_comply(m2m, m_comply)
+        logger.info("m2m_comply: before {}, after {}".format(len(m2m),len(m2m_comply)))
+
+        store.append('proximity/member_closest_beacon', m1cb)
+        store.append('proximity/member_comply', m_comply)
+        store.append('proximity/member_to_member', m2m_comply)
+        del m1cb
+        del m_comply
+        del m2m_comply
+
+    else:
+        logger.debug("m5cb is empty, skipping")
+
+    if len(m5cb_dirty) > 0:
+        logger.info("Preparing m1cb from dirty")
+        m1cb_dirty = _analysis_m1cb(m5cb_dirty, members_metadata, beacons_metadata)
+
+        logger.info("Preparing compliance table from dirty (to be used to determine participants' start day")
+        m_comply_dirty = _analysis_compliance(m2badge, m1cb_dirty, board_threshold=-48)
+
+        store.append('proximity/member_comply_dirty', m_comply_dirty)
+        del m_comply_dirty
+    else:
+        logger.debug("m5cb_dirty is empty, skipping")
+
     store.close()
 
     del m2badge
     del m5cb
-    del m1cb
-    del m_comply
 
 
 def analysis_comply():
